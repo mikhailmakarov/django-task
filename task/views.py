@@ -46,3 +46,29 @@ def add_new_categories(request):
         response['errors'] = errors
 
     return JsonResponse(response)
+
+
+@csrf_exempt
+def get_category(request, category_id):
+    def prepare_categories(categories):
+        return [
+            {
+                'id': category.pk,
+                'name': category.name,
+            } for category in categories
+        ]
+    try:
+        category = Category.objects.get(pk=category_id)
+        response = {
+            'id': category.pk,
+            'name': category.name,
+            'parents': prepare_categories(category.get_parents()),
+            'children': prepare_categories(category.get_children()),
+            'siblings': prepare_categories(category.get_siblings()),
+        }
+    except Category.DoesNotExist:
+        response = {
+            'error': 'Item does not exist',
+        }
+
+    return JsonResponse(response)
