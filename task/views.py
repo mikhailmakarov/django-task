@@ -7,7 +7,6 @@ from .models import Category
 @csrf_exempt
 def add_new_categories(request):
     def validate(data):
-        print('Check {}'.format(data['name']))
         if not isinstance(data, dict):
             raise Exception('Category must be a dictionary')
         if 'name' not in data:
@@ -18,7 +17,6 @@ def add_new_categories(request):
         if 'children' in data:
             for child in data['children']:
                 children_names = validate(child)
-                print(children_names)
                 # Check for name duplicates
                 for child_name in children_names:
                     if child_name in names:
