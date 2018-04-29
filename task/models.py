@@ -60,3 +60,17 @@ class Category(models.Model):
             except Exception:
                 continue
         self.delete()
+
+    def get_parents(self):
+        result = []
+        item = self
+        while item.parent:
+            item = item.parent
+            result.append(item)
+        return result
+
+    def get_children(self):
+        return Category.objects.filter(parent=self)
+
+    def get_siblings(self):
+        return Category.objects.filter(parent=self.parent).exclude(pk=self.pk)
